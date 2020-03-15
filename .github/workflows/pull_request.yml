@@ -4,10 +4,8 @@
 name: Python test
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -31,5 +29,11 @@ jobs:
             version: 1.0.5
     - name: Install Project Dependencies
       run: poetry install
+    - name: Run iSort
+      run: poetry run isort --check-only
+    - name: Run Black
+      run: poetry run black . --check
+    - name: Run Flake8
+      run: poetry run flake8 tests
     - name: Run pytest
       run: poetry run pytest

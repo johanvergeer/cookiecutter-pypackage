@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Tuple
 
 import pytest
-import yaml
 from click.testing import CliRunner
 from cookiecutter.utils import rmtree
 from pytest_cookies.plugin import Cookies, Result
@@ -139,18 +138,6 @@ def test_bake_with_apostrophe(bake_result):
 
 
 # endregion
-
-
-@pytest.mark.parametrize(
-    "bake_result", ([{"use_pypi_deployment_with_travis": "n"}]), indirect=True
-)
-def test_bake_without_travis_pypi_setup(bake_result: Result) -> None:
-    result_travis_config = yaml.load(
-        bake_result.project.join(".travis.yml").open(), Loader=yaml.FullLoader
-    )
-    assert "deploy" not in result_travis_config
-    assert "python" == result_travis_config["language"]
-    # found_toplevel_files = [f.basename for f in result.project.listdir()]
 
 
 # region Excluding files
@@ -286,7 +273,7 @@ def test_bake_with_click_console_script_files(bake_result: Result) -> None:
     assert f'Click = "^7.0"' in bake_result.project.join("pyproject.toml").read()
     assert (
         """[tool.poetry.plugins.\"console_scripts\"]
-    \"python_boilerplate\" = \"python_boilerplate.cli:main\""""
+\"python_boilerplate\" = \"python_boilerplate.cli:main\""""
         in bake_result.project.join("pyproject.toml").read()
     )
 
